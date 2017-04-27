@@ -71,6 +71,8 @@ public class MapPanel extends JPanel
 						new Rectangle2D.Double (c * bSize, r * bSize, bSize, bSize);
 				if (map.getSquare(r,c) == Map.OPEN_SPACE)
 					g2.setColor (Color.GRAY);
+				else if (map.getSquare(r, c)== Map.ROOM_SPACE)
+					g2.setColor(Color.DARK_GRAY);
 				else if (map.getSquare(r,c) == Map.WALL_SPACE)
 					g2.setColor (Color.BLUE);
 				else if (map.getSquare(r,c) == Map.FINISH_SPACE)
@@ -109,8 +111,8 @@ public class MapPanel extends JPanel
 			for (Creature chaser : chasers){
 					//timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
 					chaser.chase (player);
-					chaser.Gravity();
-					player.Gravity();
+				//	chaser.Gravity();
+				//	player.Gravity();
 			}
 
 		}

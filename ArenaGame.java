@@ -6,7 +6,7 @@ public class ArenaGame{
 	public static void main (String[] args){
 		int numCreatures;
 		//local variable for the creatures
-		JFrame frame = new JFrame ("Arena Escape");
+		JFrame frame = new JFrame ("The Game");
 		//creates the frame for the game
 		if (args.length < minValue)
 			numCreatures = StartingCreeps;

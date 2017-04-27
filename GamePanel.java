@@ -21,7 +21,7 @@ public class GamePanel extends JPanel{
 		int bSize = 10;
 		map = new Map (width, height);
 		//starts player out in the top left corner of the map
-		player = new Player (map, 98, 1);
+		player = new Player (map, 1, 0);
 		player.setNewMap(map);
 		chasers = new Creature[numCreatures];
 
