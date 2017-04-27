@@ -22,26 +22,38 @@ public class Map
 		Random temp = new Random();
 		int x=0;//x & y for creating and placing long walls
 		int y=0;
-		int zr=0;
-		int zc=0;
 		//if square is on the panel, makes it a WALL_SPACE
+
+
+		
+		
 		for (int r = 0; r < height; r++){
+			x=temp.nextInt((80+1 -15)+15);
+			y=temp.nextInt((120+1-15)+15);
+
 			for (int c = 0; c < width; c++){
-				x=temp.nextInt();
+				if (x%17==0||y%13==0){
+					for (int rr=x;rr<x+20;rr++){
+						for (int cc=y;cc<y+20;cc++){
+							squares[rr][cc]=OPEN_SPACE;
+						}
+					}
+				}
+				
 				if (c==70) squares[r][c]=WALL_SPACE;
 
+
+				
 				else if (r< 1 || r > 4){	
 						squares[r][c] = WALL_SPACE;
-					
 				}//if not wall then it is OPEN_SPACE
+
 				else
 					squares[r][c] = ROOM_SPACE;
 		
 			}
-		}
+		}		
 
-		
-		
 		//zone 1 vertical hallway
 		x=(temp.nextInt(67));
 		for (int r = 1; r < 50; r++){
@@ -50,9 +62,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 
 		}
-		
-		
-		
 		//zone 2 vertical hallway
 		x=(temp.nextInt(67));
 		for (int r = 10; r < 60; r++){
@@ -61,9 +70,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 
 		}
-		
-		
-		
 		//zone 3 vertical hallway
 		x=(temp.nextInt(67));
 		for (int r = 20; r < 70; r++){
@@ -72,21 +78,13 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 
 		}
-		
-		
-		
 		//zone 4 vertical hallway
 		x=(temp.nextInt(67));
 		for (int r = 30; r < 80; r++){
 			squares[r][x]=OPEN_SPACE;
 			squares[r][x+1]=OPEN_SPACE;
 			squares[r][x+2]=OPEN_SPACE;
-
 		}
-		
-		
-		
-		
 		//zone 5 vertical hallway
 		x=(temp.nextInt(67));
 		for (int r = 40; r < 95; r++){
@@ -103,9 +101,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 
 		}
-		
-		
-		
 		//zone 6 vertical hallway
 		x=(temp.nextInt(130+1 - 70)+70);
 		for (int r = 30; r < 80; r++){
@@ -115,8 +110,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 			}
 		}
-		
-		
 		//zone 7 vertical hallway
 		x=(temp.nextInt(130+1 - 70)+70);
 		for (int r = 20; r < 70; r++){
@@ -126,8 +119,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 			}
 		}
-		
-		
 		//zone 8 vertical hallway
 		x=(temp.nextInt(130+1 - 70)+70);
 		for (int r = 10; r < 50; r++){
@@ -137,9 +128,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 			}
 		}
-		
-		
-		
 		//zone 9 vertical hallway
 		x=(temp.nextInt(130+1 - 70)+70);
 		for (int r = 4; r < 45; r++){
@@ -149,9 +137,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 			}
 		}
-		
-		
-		
 		//zone 10 vertical hallway
 		x=(temp.nextInt(130+1 - 70)+70);
 		for (int r = 4; r < 60; r++){
@@ -161,11 +146,6 @@ public class Map
 			squares[r][x+2]=OPEN_SPACE;
 			}
 		}
-		
-		
-		
-		
-		
 		//zone 1 horiz. hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c = 10; c <70 ; c++){
@@ -173,9 +153,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-		
-		
 		//zone 2 horiz hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c = 20; c <80 ; c++){
@@ -183,8 +160,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-		
 		//zone 3 horiz. hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c =30; c <90 ; c++){
@@ -192,9 +167,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-		
-		
 		//zone 4 horiz. hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c = 40; c <100 ; c++){
@@ -202,9 +174,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-		
-		
 		//zone 5 horiz. hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c = 50; c < 110; c++){
@@ -212,9 +181,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-		
-		
 		//zone 6 horiz. hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c = 60; c <120 ; c++){
@@ -222,9 +188,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-		
-		
 		//zone 7 horiz. hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c = 70; c <130 ; c++){
@@ -232,9 +195,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-		
-		
 		//zone 8 horiz. hallway
 		y=(temp.nextInt(90+1 - 5)+5);
 		for (int c = 70; c <135 ; c++){
@@ -242,52 +202,6 @@ public class Map
 			squares[y+1][c]=OPEN_SPACE;
 			squares[y+2][c]=OPEN_SPACE;
 			}
-		
-
-		
-		//this loop creates random vertical walls
-		//		for the size of the map
-	/*	for(int r = 0; r < 68; r ++){
-			x=(temp.nextInt(45));
-			if (r>2){
-				if(x>1){
-					squares[x][r]=WALL_SPACE;
-					squares[x+1][r]=WALL_SPACE;
-					squares[x+2][r]=WALL_SPACE;
-					squares[x+3][r]=WALL_SPACE;
-					squares[x+4][r]=WALL_SPACE;
-					squares[x+5][r]=WALL_SPACE;
-				}
-			}
-		}
-		//this loop creates random 6-square horizontal walls
-		//	for the size of the map
-		for( int c= 1; c< 99; c ++ ){
-			
-			for (int r =1;r<139;r++ )
-			if (c%2==0){
-				
-					if (c>2){
-						if(y>2){
-							squares[c][y]=WALL_SPACE;
-							squares[c][y+1]=WALL_SPACE;
-							squares[c][y+2]=WALL_SPACE;
-							squares[c][y+3]=WALL_SPACE;
-							squares[c][y+4]=WALL_SPACE;
-							squares[c][y+5]=WALL_SPACE;
-							
-							if(y % 2==0){
-								squares[c][y+6]=WALL_SPACE;
-								squares[c][y+7]=WALL_SPACE;
-								squares[c][y+8]=WALL_SPACE;
-								squares[c][y+9]=WALL_SPACE;
-								squares[c][y+10]=WALL_SPACE;
-							
-						}
-					}
-				}				
-			}
-		}*/	
 
 		//designating Start and Finish using methods below
 		for (int c=1; c<3;c++){
