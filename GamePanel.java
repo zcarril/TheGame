@@ -26,7 +26,7 @@ public class GamePanel extends JPanel{
 		chasers = new Creature[numCreatures];
 
 		
-		for (int i = 0; i < numCreatures+numLvl; i++){
+		for (int i = 0; i < numCreatures+(numLvl); i++){
 			//temporary variable for randomly placing the Creature types
 			Random temp = new Random();
 			chasers[i] = new Creature (map, temp.nextInt(height-2)+1,

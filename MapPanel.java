@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.*;
+import java.util.Random;
 
 public class MapPanel extends JPanel
 {//necessary items for MapPanel
@@ -39,6 +40,12 @@ public class MapPanel extends JPanel
 	public void setNewMap(Map x){
 		this.map=x;
 	}
+	public boolean checkRoomSpace(int r,int c){
+		if (map.getSquare(r,c)==Map.ROOM_SPACE)
+			return true;
+		else return false;
+	}
+
 	//sets the timer back to 1000 delay
 	public void refreshTimer(){
 		this.timer.setDelay(wait);
@@ -70,13 +77,13 @@ public class MapPanel extends JPanel
 				Rectangle2D.Double bkgnd =
 						new Rectangle2D.Double (c * bSize, r * bSize, bSize, bSize);
 				if (map.getSquare(r,c) == Map.OPEN_SPACE)
-					g2.setColor (Color.GRAY);
+					g2.setColor (Color.CYAN);
 				else if (map.getSquare(r, c)== Map.ROOM_SPACE)
 					g2.setColor(Color.DARK_GRAY);
 				else if (map.getSquare(r,c) == Map.WALL_SPACE)
-					g2.setColor (Color.BLUE);
+					g2.setColor (Color.BLACK);
 				else if (map.getSquare(r,c) == Map.FINISH_SPACE)
-					g2.setColor (Color.GREEN);
+					g2.setColor (Color.RED);
 				else
 					g2.setColor (Color.WHITE);
 				g2.fill (bkgnd);
