@@ -12,10 +12,12 @@ public class GamePanel extends JPanel{
 	private static MapPanel mapPanel;
 	private static Creature[] chasers;
 	private static Timer timer;
-	public int numLvl = 0;//numbers clicks every level past
+	private int numLvl=0;//numbers clicks every level past
+	protected int creatureCount;
+	
 	public GamePanel (int numCreatures){
 		// create a 70x50 map w/ 10x10-pixel blocks
-	//	this.creatureCount=numCreatures;
+		this.creatureCount=numCreatures;
 		int width = 140;
 		int height = 100;
 		int bSize = 10;
@@ -23,16 +25,22 @@ public class GamePanel extends JPanel{
 		//starts player out in the top left corner of the map
 		player = new Player (map, 1, 0);
 		player.setNewMap(map);
-		chasers = new Creature[numCreatures];
+		chasers = new Creature[creatureCount];
 
 		
-		for (int i = 0; i < numCreatures+(numLvl); i++){
-			//temporary variable for randomly placing the Creature types
-			Random temp = new Random();
-			chasers[i] = new Creature (map, temp.nextInt(height-2)+1,
-										temp.nextInt(width-2)+1);
-
-			}
+		Random temp = new Random();
+   		int i = 0;
+   		while (i < creatureCount) {
+   			int r = temp.nextInt(90-4)+1;
+   			int c = temp.nextInt(130-4)+1;
+   			
+   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+   			{
+   				System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+	   			chasers[i] = new Creature(map, r, c);
+	   			i++;
+   			}
+   		}
 		
 		//making new MapPanel object with everything it need to meet object type qualifications
 		//setting proper size,adding listeners, setting layout to flow layout, and finally adding
@@ -68,9 +76,9 @@ public class GamePanel extends JPanel{
 			   		System.exit(0);//simple close if no longer answer is no
 			   	}
 			   	else{//on to next stage
-			   		numLvl += 1;				//clicker for levels cleared total
-			   		int creatureCount=2;
-			   		creatureCount= numLvl*creatureCount;			//creature multiplier
+			   		numLvl = numLvl + 1;				//clicker for levels cleared total
+			   		creatureCount= creatureCount + numLvl;			//creature multiplier
+			   		System.out.println("new creature count "+creatureCount+" for level "+numLvl);
 			   				   	
 			   	//	chasers = new Creature[creatureCount];			
 			   	//	buffchasers= new BuffCreature[creatureCount];	<------	attempt at addition of creatures as you hit new levels.
@@ -84,10 +92,20 @@ public class GamePanel extends JPanel{
 					mapPanel.refreshTimer();	//sets the delay to the original every new map 
 					mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
 					//randomly sets resets all Creature types
+					chasers = new Creature[creatureCount];
+					mapPanel.resetChasers(chasers);
 			   		Random temp = new Random();
-			   		for (int i = 0; i < (chasers.length); i++){
-			   			chasers[i].setNewMap(map);	//resets map for creatures
-			   			chasers[i].shuffle(temp.nextInt(50-4)+1,temp.nextInt(70-4)+1);
+			   		int i = 0;
+			   		while (i < creatureCount) {
+			   			int r = temp.nextInt(90-4)+1;
+			   			int c = temp.nextInt(130-4)+1;
+			   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+			   			{
+				   			System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+				   			chasers[i] = new Creature(map, r, c);
+				   			
+				   			i++;
+			   			}
 			   		}
 
 			   		mapPanel.repaint();
@@ -107,17 +125,27 @@ public class GamePanel extends JPanel{
 		   		numLvl=0;
 		   		player.Reset();
 		   		mapPanel.redoGameState();
-		   		Random temp = new Random();
 				map = new Map (map.getWidth(), map.getHeight());
 				mapPanel.setNewMap(map);
 				player.setNewMap(map);
+				creatureCount = 5;
 				
-		   		for (int i = 0; i < chasers.length; i++){
-		   			chasers[i].setNewMap(map);
-		   			chasers[i].shuffle(temp.nextInt(50-2)+1,temp.nextInt(70-2)+1);
+				
+				chasers = new Creature[creatureCount];
+				mapPanel.resetChasers(chasers);
+		   		Random temp = new Random();
+		   		int i = 0;
+		   		while (i < creatureCount) {
+		   			int r = temp.nextInt(90-4)+1;
+		   			int c = temp.nextInt(130-4)+1;
+		   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+		   			{
+			   			System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+			   			chasers[i] = new Creature(map, r, c);
+			   			
+			   			i++;
+		   			}
 		   		}
-
-		   		
 
 		   		mapPanel.refreshTimer();
 		   		mapPanel.repaint();
@@ -149,7 +177,11 @@ public class GamePanel extends JPanel{
 			case KeyEvent.VK_DOWN:
 				player.move(4);
 				break;
-				}
+			case KeyEvent.VK_SPACE:
+				player.dropBomb();
+				break;	
+			}
+
 		}
 	}
 }

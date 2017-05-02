@@ -40,6 +40,14 @@ public class MapPanel extends JPanel
 	public void setNewMap(Map x){
 		this.map=x;
 	}
+	
+	public void resetChasers(Creature[] c){
+		this.creatures=c;
+		this.timer = new Timer (wait, null);
+		timer.addActionListener(new CreatureTimer (timer, player, creatures));
+		timer.start();
+	}
+	
 	public boolean checkRoomSpace(int r,int c){
 		if (map.getSquare(r,c)==Map.ROOM_SPACE)
 			return true;
@@ -116,8 +124,14 @@ public class MapPanel extends JPanel
 		//	and then sets that that number as the new delay
 		public void actionPerformed (ActionEvent e){
 			for (Creature chaser : chasers){
-					//timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
+				chaser.wander();
+				double a= (player.getPos().r-chaser.getPos().r);
+				double b= (player.getPos().c-chaser.getPos().c);
+				if (Math.abs(a)<=10 || Math.abs(b)<10 ){
 					chaser.chase (player);
+				}
+					//timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
+				//	
 				//	chaser.Gravity();
 				//	player.Gravity();
 			}

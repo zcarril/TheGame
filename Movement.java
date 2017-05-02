@@ -1,3 +1,5 @@
+import java.util.Random;
+
 //template for Player,Creature, CrookedCreature, and BuffCreature
 //	to use. can modify specifics of the the abstract in specific
 //	class if needed. e.g jumping spaces, diagonal
@@ -31,10 +33,9 @@ public abstract class Movement
 	
 	//used by creature types when map refreshes. randomly generated numbers are
 	// put it at map change, used in GamePanel
-	public Position shuffle(int r, int c){
-		Position shuff=new Position(r,c);
-		pos=shuff;
-		return shuff;
+	public void changePosition(int r, int c){
+		Position replacement=new Position(r,c);
+		pos=replacement;
 	}
 
 	protected boolean validMove (int r, int c){
@@ -105,6 +106,11 @@ public abstract class Movement
 				pos.r += (0.5*OneStep);
 			break;
 		}
+	}
+	protected void wander(){
+		Random temp = new Random();
+		int x=temp.nextInt((4 -1)+1);
+		move(x);
 	}
 }
 

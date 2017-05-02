@@ -53,9 +53,7 @@ public class Map
 							 if(cc>3)squares[rr][cc]=OPEN_SPACE;
 							 c1+=1;
 							 if(c1==2)break;
-						}
-
-						 
+						}						 
 					}
 				}
 				if (x1%9==0){
@@ -64,9 +62,7 @@ public class Map
 							if(cc>3)squares[rr][cc]=OPEN_SPACE;
 							c2+=1;
 							if(c2==2)break;
-						}
-
-						 
+						}						 
 					}
 				}
 				if (y1%6==0){
@@ -75,8 +71,7 @@ public class Map
 							squares[rr][cc]=OPEN_SPACE;
 							c3+=1;	 
 							if(c3==2)break;
-						}
-						
+						}						
 					}
 				}
 				if (x1%8==0){
@@ -85,11 +80,9 @@ public class Map
 							squares[rr][cc]=OPEN_SPACE;
 							c4+=1;
 							if(c4==2)break;
-						}
-						
+						}						
 					}
 				}
-
 		}
 		for (int r= 5; r< 25;r++)
 			for (int c=10; c<13;c++)
@@ -108,8 +101,7 @@ public class Map
 						}
 					}
 				}	
-			}
-			
+			}			
 		}	
 		for (int r=0; r<1;r++)
 			for (int c=0; c<width-1;c++)
@@ -117,7 +109,6 @@ public class Map
 		for (int r=0; r<5;r++)
 			for (int c=30; c<100;c++)
 				squares[r][c]=WALL_SPACE;
-
 
 		//designating Start and Finish using methods below
 		for (int c=1; c<5;c++){
@@ -137,7 +128,6 @@ public class Map
 		else
 			start = null;
 	}
-
 	protected Position getStart () {
 		return start;
 	}
@@ -155,6 +145,7 @@ public class Map
 	protected Position getFinish () {
 		return finish;
 	}
+	
 	//gets Width
 	public int getWidth() {
 		return width;
