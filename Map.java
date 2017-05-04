@@ -28,10 +28,6 @@ public class Map
 		int c2=0;
 		int c3=0;
 		int c4=0;
-		int m1=0;
-		int m2=0;
-		int m3=0;
-		int m4=0;
 		//if square is on the panel, makes it a WALL_SPACE
 
 
@@ -45,38 +41,38 @@ public class Map
 			}
 		}
 		for(int r =0; r<height; r++){
-			x1=temp.nextInt((65 -5)+5);
-			y1=temp.nextInt((120-5)+5);	
-				if (y1%7==0){
-					for (int rr=5;rr<40;rr++){
-						for (int cc=y1;cc<y1+3;cc++){
+			x1=temp.nextInt((45 -5)+5);
+			y1=temp.nextInt((80-5)+5);	
+				if (y1%7==0|| x1%11==0){
+					for (int rr=5;rr<25;rr++){
+						for (int cc=y1;cc<y1+2;cc++){
 							 if(cc>3)squares[rr][cc]=OPEN_SPACE;
 							 c1+=1;
 							 if(c1==2)break;
 						}						 
 					}
 				}
-				if (x1%9==0){
-					for (int rr=40;rr<95;rr++){
-						for (int cc=y1;cc<y1+3;cc++){
+				if (x1%9==0|| y1%13==0){
+					for (int rr=20;rr<47;rr++){
+						for (int cc=y1;cc<y1+2;cc++){
 							if(cc>3)squares[rr][cc]=OPEN_SPACE;
 							c2+=1;
 							if(c2==2)break;
 						}						 
 					}
 				}
-				if (y1%6==0){
-					for (int cc=10;cc<80;cc++){
-						for (int rr=x1;rr<x1+3;rr++){
+				if (y1%6==0|| x1%17==0){
+					for (int cc=5;cc<50;cc++){
+						for (int rr=x1;rr<x1+2;rr++){
 							squares[rr][cc]=OPEN_SPACE;
 							c3+=1;	 
 							if(c3==2)break;
 						}						
 					}
 				}
-				if (x1%8==0){
-					for (int cc=60;cc<130;cc++){
-						for (int rr=x1;rr<x1+3;rr++){
+				if (x1%8==0|| y1%15==0){
+					for (int cc=40;cc<85;cc++){
+						for (int rr=x1;rr<x1+2;rr++){
 							squares[rr][cc]=OPEN_SPACE;
 							c4+=1;
 							if(c4==2)break;
@@ -88,15 +84,15 @@ public class Map
 			for (int c=10; c<13;c++)
 				squares[r][c]=OPEN_SPACE;
 		for (int r= 5; r<25;r++)
-			for (int c=120;c<123;c++)
+			for (int c=80;c<82;c++)
 				squares[r][c]=OPEN_SPACE;
-		for (int r = 15; r < height; r++){
-			x=temp.nextInt((80 -15)+15);
-			y=temp.nextInt((120-15)+15);
-			for (int c = 15; c < width; c++){
-				if ((x%13==0)){
-					for (int rr=x;rr<x+20;rr++){
-						for (int cc=y;cc<y+20;cc++){
+		for (int r = 10; r < height; r++){
+			x=temp.nextInt((35 -10)+10);
+			y=temp.nextInt((75-10)+10);
+			for (int c = 10; c < width; c++){
+				if ((x%2==0 && x%3==0)){
+					for (int rr=x;rr<x+15;rr++){
+						for (int cc=y;cc<y+15;cc++){
 							if (x>10 && y>10) squares[rr][cc]=ROOM_SPACE;
 						}
 					}
@@ -107,7 +103,7 @@ public class Map
 			for (int c=0; c<width-1;c++)
 				squares[r][c]=WALL_SPACE;
 		for (int r=0; r<5;r++)
-			for (int c=30; c<100;c++)
+			for (int c=30; c<70;c++)
 				squares[r][c]=WALL_SPACE;
 
 		//designating Start and Finish using methods below

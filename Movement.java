@@ -37,6 +37,7 @@ public abstract class Movement
 		Position replacement=new Position(r,c);
 		pos=replacement;
 	}
+	
 
 	protected boolean validMove (int r, int c){
 		if ((r >= 0 && r < map.getHeight()) && (c >= 0 && c < map.getWidth()))

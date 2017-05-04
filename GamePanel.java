@@ -11,28 +11,44 @@ public class GamePanel extends JPanel{
 	private static Player player;
 	private static MapPanel mapPanel;
 	private static Creature[] chasers;
+	private static PlayerBomb bomb;
+	private static LevelKey[] keys;
 	private static Timer timer;
 	private int numLvl=0;//numbers clicks every level past
 	protected int creatureCount;
+	protected int keyCount;
 	
 	public GamePanel (int numCreatures){
 		// create a 70x50 map w/ 10x10-pixel blocks
 		this.creatureCount=numCreatures;
-		int width = 140;
-		int height = 100;
-		int bSize = 10;
+		this.keyCount=1;
+		int width = 90;
+		int height = 50;
+		int bSize = 20;
 		map = new Map (width, height);
 		//starts player out in the top left corner of the map
 		player = new Player (map, 1, 0);
 		player.setNewMap(map);
 		chasers = new Creature[creatureCount];
-
+		keys=new LevelKey[keyCount]; 
 		
 		Random temp = new Random();
+		int j=0;
+   		while (j < keyCount) {
+   			int r = temp.nextInt(50-4)+1;
+   			int c = temp.nextInt(90-4)+1;
+   			
+   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+   			{
+   				System.out.println("trying for key in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+	   			keys[j] = new LevelKey(map, r, c);
+	   			j++;
+   			}
+   		}
    		int i = 0;
    		while (i < creatureCount) {
-   			int r = temp.nextInt(90-4)+1;
-   			int c = temp.nextInt(130-4)+1;
+   			int r = temp.nextInt(50-4)+1;
+   			int c = temp.nextInt(90-4)+1;
    			
    			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
    			{
@@ -41,11 +57,11 @@ public class GamePanel extends JPanel{
 	   			i++;
    			}
    		}
-		
+
 		//making new MapPanel object with everything it need to meet object type qualifications
 		//setting proper size,adding listeners, setting layout to flow layout, and finally adding
 		//	the mapPanel
-		mapPanel = new MapPanel (map, player, chasers, bSize);
+		mapPanel = new MapPanel (map, player, chasers, keys, bomb, bSize);
 		mapPanel.setPreferredSize (new Dimension ((width+2) * bSize, (height+1) * bSize));
 		mapPanel.addKeyListener (new PlayerController (player));
 		mapPanel.setFocusable (true);
@@ -56,7 +72,10 @@ public class GamePanel extends JPanel{
 		this.timer = new Timer (delay, new TimerListener());
 		timer.start();
 	
+	
+
 	}
+
 	 // check the game status every X milliseconds
 	 //		(as defined upon Timer creation). 
 	private class TimerListener implements ActionListener
@@ -64,6 +83,7 @@ public class GamePanel extends JPanel{
 		public void actionPerformed (ActionEvent e)
 		{
 			mapPanel.repaint();
+			mapPanel.checkKeys();
 			//using the checkWinLoss here as conditions
 			if (mapPanel.checkWinLoss() != 0)
 				timer.stop();
@@ -76,8 +96,9 @@ public class GamePanel extends JPanel{
 			   		System.exit(0);//simple close if no longer answer is no
 			   	}
 			   	else{//on to next stage
-			   		numLvl = numLvl + 1;				//clicker for levels cleared total
+			   		numLvl = numLvl+1;				//clicker for levels cleared total
 			   		creatureCount= creatureCount + numLvl;			//creature multiplier
+			   		keyCount+=numLvl;
 			   		System.out.println("new creature count "+creatureCount+" for level "+numLvl);
 			   				   	
 			   	//	chasers = new Creature[creatureCount];			
@@ -93,8 +114,22 @@ public class GamePanel extends JPanel{
 					mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
 					//randomly sets resets all Creature types
 					chasers = new Creature[creatureCount];
+					keys=new LevelKey[keyCount];
 					mapPanel.resetChasers(chasers);
+					mapPanel.resetKeys(keys);
 			   		Random temp = new Random();
+					int j=0;
+			   		while (j < keyCount) {
+			   			int r = temp.nextInt(50-4)+1;
+			   			int c = temp.nextInt(90-4)+1;
+			   			
+			   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+			   			{
+			   				System.out.println("trying for key in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+				   			keys[j] = new LevelKey(map, r, c);
+				   			j++;
+			   			}
+			   		}
 			   		int i = 0;
 			   		while (i < creatureCount) {
 			   			int r = temp.nextInt(90-4)+1;
@@ -132,12 +167,26 @@ public class GamePanel extends JPanel{
 				
 				
 				chasers = new Creature[creatureCount];
+				keys=new LevelKey[creatureCount/3];
 				mapPanel.resetChasers(chasers);
+				mapPanel.resetKeys(keys);
 		   		Random temp = new Random();
+				int j=0;
+		   		while (j < keyCount) {
+		   			int x = temp.nextInt(50-4)+1;
+		   			int y = temp.nextInt(90-4)+1;
+		   			
+		   			if (map.getSquare(x,y) == 4) //4 == ROOM_SPACE
+		   			{
+		   				System.out.println("trying for key in "+x+" "+y+" with attribute number "+map.getSquare(x, y)); //error checking space spawned in
+			   			keys[j] = new LevelKey(map, x,y);
+			   			j++;
+		   			}
+		   		}
 		   		int i = 0;
 		   		while (i < creatureCount) {
-		   			int r = temp.nextInt(90-4)+1;
-		   			int c = temp.nextInt(130-4)+1;
+		   			int r = temp.nextInt(50-4)+1;
+		   			int c = temp.nextInt(90-4)+1;
 		   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
 		   			{
 			   			System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
@@ -178,7 +227,8 @@ public class GamePanel extends JPanel{
 				player.move(4);
 				break;
 			case KeyEvent.VK_SPACE:
-				player.dropBomb();
+				player.PlaceBomb(map, player.getPos().r, player.getPos().c);
+				
 				break;	
 			}
 

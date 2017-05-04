@@ -1,10 +1,9 @@
 
 public class Player extends Movement
-{ //uses the template of Movement abstract class to function
-
-	public Player(Map map, int r, int c) {
+{ public Player(Map map, int r, int c) {
 		super(map, r, c);
 	}
-	protected void dropBomb(){
+	public void PlaceBomb(Map map, int r, int c){
+			new PlayerBomb(map, r, c);
 	}
 }

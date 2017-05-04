@@ -10,31 +10,42 @@ public class MapPanel extends JPanel
 {//necessary items for MapPanel
 	private Map map;
 	private Creature[] creatures;
+	private LevelKey[] keys;
 
 	private Player player;
+	private PlayerBomb bomb;
 	private int width, height, bSize;
 	private Timer timer;
 	private int wait = 400; //wait for creatures to move
 	private static int gameState;
+	private static int keyCount;
 
-	public MapPanel (Map map, Player player, Creature[] creatures, int squareSize){
+	public MapPanel (Map map, Player player, Creature[] creatures, LevelKey[] keys, PlayerBomb bomb, int squareSize){
 		this.map = map;
 		this.player = player;
 		this.creatures = creatures;
+		this.keys=keys;
 		//sets border size to the size of a square, gets Width and Height
 		bSize = squareSize;
 		width = map.getWidth();
 		height = map.getHeight();
 		//sets the gameState to zero(playable)
 		gameState = 0;
+
 		//sets the timer to the initial value(1000), fills the field for the Listener, and starts the timer
 		this.timer = new Timer (wait, null);
-		timer.addActionListener(new CreatureTimer (timer, player, creatures));
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures));
 		timer.start();
 	}
 	//sets the game back to a playable state
 	public void redoGameState(){
 		gameState=0;
+	}
+	public int getKeyCount(){
+		for(LevelKey key: keys){
+			keyCount++;
+		}
+		return keyCount;
 	}
 	//sets the map to a new state, from initial values
 	public void setNewMap(Map x){
@@ -44,7 +55,13 @@ public class MapPanel extends JPanel
 	public void resetChasers(Creature[] c){
 		this.creatures=c;
 		this.timer = new Timer (wait, null);
-		timer.addActionListener(new CreatureTimer (timer, player, creatures));
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures));
+		timer.start();
+	}
+	public void resetKeys(LevelKey[] k){
+		this.keys=k;
+		this.timer = new Timer (wait, null);
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures));
 		timer.start();
 	}
 	
@@ -73,9 +90,23 @@ public class MapPanel extends JPanel
 			if (creature.getPos().c == player.getPos().c 
 					&& creature.getPos().r == player.getPos().r)
 				gameState = -1;
+				
 		//check if player eaten by creature type BuffCreature (lose)
 		return gameState;
 	}
+	protected int checkKeys(){
+		for (LevelKey key : keys){
+			if(key.getPos().c==player.getPos().c && key.getPos().r==player.getPos().r){
+	//			GamePanel.removeKey(key);
+				keyCount-=1;
+				System.out.println("current key count at" + keyCount);
+				break;
+			}
+		}
+		return keyCount;
+	}
+	
+
 	//paints the components to the specified color
 	protected void paintComponent (Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
@@ -104,16 +135,22 @@ public class MapPanel extends JPanel
 		for (Creature creature: creatures)
 			g2.fillOval (creature.getPos().c * bSize,
 						creature.getPos().r * bSize, bSize, bSize);
+		g2.setColor(Color.YELLOW);
+		for (LevelKey key: keys)
+			g2.fillOval (key.getPos().c * bSize,
+					key.getPos().r * bSize, bSize, bSize);
 
 	}
 	//controller of the timing of the creatures
 	private class CreatureTimer implements ActionListener{
 		private Player player;
+		private PlayerBomb bomb;
 		private Creature[] chasers;
 		private Timer timer;
 		private double k= 0.0001; //constant that sets the delay decay
 		
-		protected CreatureTimer (Timer t, Player player, Creature[] chasers){	
+		protected CreatureTimer (Timer t, Player player, PlayerBomb bomb, Creature[] chasers){
+			this.bomb=bomb;
 			this.timer = t;
 			this.player = player;
 			this.chasers = chasers;	
@@ -127,7 +164,7 @@ public class MapPanel extends JPanel
 				chaser.wander();
 				double a= (player.getPos().r-chaser.getPos().r);
 				double b= (player.getPos().c-chaser.getPos().c);
-				if (Math.abs(a)<=10 || Math.abs(b)<10 ){
+				if (Math.abs(a)<=5 || Math.abs(b)<5 ){
 					chaser.chase (player);
 				}
 					//timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
@@ -138,6 +175,10 @@ public class MapPanel extends JPanel
 
 		}
 	}
+//	public void removeKey(Movement x){
+	//	MapPanel.remove(x);
+//	}
+
 }
 
 
