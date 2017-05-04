@@ -30,7 +30,9 @@ public class GamePanel extends JPanel{
 		player = new Player (map, 1, 0);
 		player.setNewMap(map);
 		chasers = new Creature[creatureCount];
-		keys=new LevelKey[keyCount]; 
+		keys=new LevelKey[keyCount];
+		
+
 		
 		Random temp = new Random();
 		int j=0;
@@ -57,6 +59,9 @@ public class GamePanel extends JPanel{
 	   			i++;
    			}
    		}
+   		if (bomb!=null){
+   			bomb=new PlayerBomb(map,player.getPos().r, player.getPos().c);
+   		}
 
 		//making new MapPanel object with everything it need to meet object type qualifications
 		//setting proper size,adding listeners, setting layout to flow layout, and finally adding
@@ -72,9 +77,10 @@ public class GamePanel extends JPanel{
 		this.timer = new Timer (delay, new TimerListener());
 		timer.start();
 	
-	
+
 
 	}
+
 
 	 // check the game status every X milliseconds
 	 //		(as defined upon Timer creation). 
@@ -172,7 +178,7 @@ public class GamePanel extends JPanel{
 				mapPanel.resetKeys(keys);
 		   		Random temp = new Random();
 				int j=0;
-		   		while (j < keyCount) {
+		   		while (j <= keyCount) {
 		   			int x = temp.nextInt(50-4)+1;
 		   			int y = temp.nextInt(90-4)+1;
 		   			
@@ -227,13 +233,15 @@ public class GamePanel extends JPanel{
 				player.move(4);
 				break;
 			case KeyEvent.VK_SPACE:
-				player.PlaceBomb(map, player.getPos().r, player.getPos().c);
-				
+			//	player.PlaceBomb(map, player.getPos().r, player.getPos().c);
+				mapPanel.placeBomb(map,player.getPos().r,player.getPos().c);
+				System.out.println("trying for bomb at "+ player.getPos().r+" and "+player.getPos().c);
 				break;	
 			}
 
 		}
 	}
+
 }
 
 

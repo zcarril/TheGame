@@ -51,6 +51,7 @@ public class MapPanel extends JPanel
 	public void setNewMap(Map x){
 		this.map=x;
 	}
+
 	
 	public void resetChasers(Creature[] c){
 		this.creatures=c;
@@ -75,6 +76,12 @@ public class MapPanel extends JPanel
 	public void refreshTimer(){
 		this.timer.setDelay(wait);
 	}
+	public void placeBomb(Map m, int r, int c){
+		this.map=m;
+	//	r=player.getPos().r;
+	//	c=player.getPos().c;
+		bomb=new PlayerBomb(map,r,c);
+	}
 	//initial delay shortens by fraction of time, used upon clearing level
 	public void shortenDelay(int x){
 		this.timer.setDelay((int)(wait-x*10));
@@ -94,10 +101,13 @@ public class MapPanel extends JPanel
 		//check if player eaten by creature type BuffCreature (lose)
 		return gameState;
 	}
+	public void removeKey(LevelKey x){
+		x=null;
+	}
 	protected int checkKeys(){
 		for (LevelKey key : keys){
 			if(key.getPos().c==player.getPos().c && key.getPos().r==player.getPos().r){
-	//			GamePanel.removeKey(key);
+				removeKey(key);
 				keyCount-=1;
 				System.out.println("current key count at" + keyCount);
 				break;
@@ -139,8 +149,14 @@ public class MapPanel extends JPanel
 		for (LevelKey key: keys)
 			g2.fillOval (key.getPos().c * bSize,
 					key.getPos().r * bSize, bSize, bSize);
-
+		if (bomb!=null){
+			g2.setColor(Color.pink);
+			g2.fillOval (bomb.getPos().c * bSize, bomb.getPos().r * bSize, bSize, bSize);
+		}
 	}
+
+
+	
 	//controller of the timing of the creatures
 	private class CreatureTimer implements ActionListener{
 		private Player player;
@@ -175,9 +191,7 @@ public class MapPanel extends JPanel
 
 		}
 	}
-//	public void removeKey(Movement x){
-	//	MapPanel.remove(x);
-//	}
+
 
 }
 
