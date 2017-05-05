@@ -110,8 +110,22 @@ public class Map
 		for (int c=1; c<5;c++){
 			setStart (c, 0);
 		}
-		for (int c =1; c<5; c++ ){
-			setFinish (c, width-1);
+		setFinish(4,width-1);
+		for (int c =1; c<5; c++ )
+			squares[c][width-2]=WALL_SPACE;
+		
+	//		for (int c =1; c<5; c++ ){
+//				setFinish (c, width-1);	
+//		}
+	}
+	public void clearFinish(int x){		
+		if (x==0){
+			for (int c =3; c<5; c++ ){
+				squares[c][width-2]=OPEN_SPACE;	
+			}
+			squares[2][width-3]=WALL_SPACE;
+			squares[2][width-4]=WALL_SPACE;
+			System.out.println("Finish OPEN");
 		}
 	}
 	//checks if a valid position,if so can be set as start

@@ -31,6 +31,7 @@ public class MapPanel extends JPanel
 		height = map.getHeight();
 		//sets the gameState to zero(playable)
 		gameState = 0;
+		keyCount=1;
 
 		//sets the timer to the initial value(1000), fills the field for the Listener, and starts the timer
 		this.timer = new Timer (wait, null);
@@ -42,6 +43,7 @@ public class MapPanel extends JPanel
 		gameState=0;
 	}
 	public int getKeyCount(){
+		keyCount=1;
 		for(LevelKey key: keys){
 			keyCount++;
 		}
@@ -86,6 +88,9 @@ public class MapPanel extends JPanel
 	public void shortenDelay(int x){
 		this.timer.setDelay((int)(wait-x*10));
 	}
+	public void moveObject(Map map, int r, int x){
+		
+	}
 	//checker if won or lost (win==1, lose==-1 (gameState))
 	protected int checkWinLoss(){
 		//check if player at finish(win)
@@ -101,19 +106,27 @@ public class MapPanel extends JPanel
 		//check if player eaten by creature type BuffCreature (lose)
 		return gameState;
 	}
-	public void removeKey(LevelKey x){
-		x=null;
-	}
 	protected int checkKeys(){
 		for (LevelKey key : keys){
 			if(key.getPos().c==player.getPos().c && key.getPos().r==player.getPos().r){
-				removeKey(key);
 				keyCount-=1;
+				map.clearFinish(keyCount);
 				System.out.println("current key count at" + keyCount);
-				break;
+				key.changePosition(width-1, height-1);
 			}
+			
 		}
+		
 		return keyCount;
+	}
+	protected void checkBombs(){
+		for (Creature creature : creatures){
+			if (bomb!=null)
+			if (creature.getPos().c == bomb.getPos().c && creature.getPos().r == bomb.getPos().r){
+				creature.changePosition(width-1, height-1);
+				bomb.changePosition(width-1, height-1);
+			}
+		}	
 	}
 	
 
@@ -184,9 +197,7 @@ public class MapPanel extends JPanel
 					chaser.chase (player);
 				}
 					//timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
-				//	
-				//	chaser.Gravity();
-				//	player.Gravity();
+
 			}
 
 		}

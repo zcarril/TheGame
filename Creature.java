@@ -21,7 +21,7 @@ public class Creature extends Movement
 			if (colDelta > 0)
 				move(1);
 			else
-				move (2);
+				move(2);
 		}
 		else
 		{

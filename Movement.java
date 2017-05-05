@@ -92,26 +92,26 @@ public abstract class Movement
 		{
 		case 1:
 			if (validMove(pos.r,pos.c-OneStep))
-				pos.c -= (0.5*OneStep);
+				pos.c -= 0.5*OneStep;
 			break;
 		case 2:
 			if (validMove(pos.r,pos.c+OneStep))
-				pos.c += (0.5*OneStep);
+				pos.c += 0.5*OneStep;
 			break;					
 		case 3:
 			if (validMove(pos.r-(OneStep),pos.c))
-				pos.r -= (OneStep);
+				pos.r -= 0.5*OneStep;
 			break;
 		case 4:
 			if (validMove(pos.r+OneStep,pos.c))
-				pos.r += (0.5*OneStep);
+				pos.r += 0.5*OneStep;
 			break;
 		}
 	}
 	protected void wander(){
 		Random temp = new Random();
 		int x=temp.nextInt((4 -1)+1);
-		move(x);
+		monsterMove(x);
 	}
 }
 

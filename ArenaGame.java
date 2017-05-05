@@ -1,7 +1,7 @@
 import javax.swing.*;
 //class that runs the game
 public class ArenaGame{
-	private static final int StartingCreeps=5;
+	private static final int StartingCreeps=3;
 	private static final int minValue=1;
 	public static void main (String[] args){
 		int numCreatures;

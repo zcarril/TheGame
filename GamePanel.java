@@ -33,7 +33,6 @@ public class GamePanel extends JPanel{
 		keys=new LevelKey[keyCount];
 		
 
-		
 		Random temp = new Random();
 		int j=0;
    		while (j < keyCount) {
@@ -47,6 +46,7 @@ public class GamePanel extends JPanel{
 	   			j++;
    			}
    		}
+		
    		int i = 0;
    		while (i < creatureCount) {
    			int r = temp.nextInt(50-4)+1;
@@ -62,6 +62,7 @@ public class GamePanel extends JPanel{
    		if (bomb!=null){
    			bomb=new PlayerBomb(map,player.getPos().r, player.getPos().c);
    		}
+   			
 
 		//making new MapPanel object with everything it need to meet object type qualifications
 		//setting proper size,adding listeners, setting layout to flow layout, and finally adding
@@ -82,6 +83,7 @@ public class GamePanel extends JPanel{
 	}
 
 
+
 	 // check the game status every X milliseconds
 	 //		(as defined upon Timer creation). 
 	private class TimerListener implements ActionListener
@@ -90,6 +92,7 @@ public class GamePanel extends JPanel{
 		{
 			mapPanel.repaint();
 			mapPanel.checkKeys();
+			mapPanel.checkBombs();
 			//using the checkWinLoss here as conditions
 			if (mapPanel.checkWinLoss() != 0)
 				timer.stop();
@@ -104,7 +107,7 @@ public class GamePanel extends JPanel{
 			   	else{//on to next stage
 			   		numLvl = numLvl+1;				//clicker for levels cleared total
 			   		creatureCount= creatureCount + numLvl;			//creature multiplier
-			   		keyCount+=numLvl;
+			   		keyCount=numLvl+1;
 			   		System.out.println("new creature count "+creatureCount+" for level "+numLvl);
 			   				   	
 			   	//	chasers = new Creature[creatureCount];			
@@ -112,6 +115,7 @@ public class GamePanel extends JPanel{
 			   	//	cChasers= new CrookedCreature[creatureCount];			   
 			    
 			   		player.Reset();				//resets to origin position	
+			   		mapPanel.getKeyCount();
 			   		mapPanel.redoGameState();	//gameState in checkWinLoss is back to zero
 					map = new Map (map.getWidth(), map.getHeight());//a new Map object, gets proper Width and Height from class
 					mapPanel.setNewMap(map);	//fetching mapPanel's method of setting up fresh mapPanel for game
@@ -163,29 +167,39 @@ public class GamePanel extends JPanel{
 		   		System.exit(0);
 		   		}
 		   	else{
-		   		numLvl=0;
-		   		player.Reset();
-		   		mapPanel.redoGameState();
-				map = new Map (map.getWidth(), map.getHeight());
-				mapPanel.setNewMap(map);
-				player.setNewMap(map);
-				creatureCount = 5;
-				
-				
+		   		numLvl = 0;				//clicker for levels cleared total
+		   		creatureCount= 3;			//creature multiplier
+		   		keyCount=numLvl+1;
+		   		System.out.println("new creature count "+creatureCount+" for level "+numLvl);
+		   		System.out.println("new key count "+keyCount+" for level "+numLvl);
+		   				   	
+		   	//	chasers = new Creature[creatureCount];			
+		   	//	buffchasers= new BuffCreature[creatureCount];	<------	attempt at addition of creatures as you hit new levels.
+		   	//	cChasers= new CrookedCreature[creatureCount];			   
+		    
+		   		player.Reset();				//resets to origin position	
+		   		mapPanel.getKeyCount();
+		   		mapPanel.redoGameState();	//gameState in checkWinLoss is back to zero
+				map = new Map (map.getWidth(), map.getHeight());//a new Map object, gets proper Width and Height from class
+				mapPanel.setNewMap(map);	//fetching mapPanel's method of setting up fresh mapPanel for game
+				player.setNewMap(map);		//sends new map to players, for new walls
+				mapPanel.refreshTimer();	//sets the delay to the original every new map 
+			//	mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
+				//randomly sets resets all Creature types
 				chasers = new Creature[creatureCount];
-				keys=new LevelKey[creatureCount/3];
+				keys=new LevelKey[keyCount];
 				mapPanel.resetChasers(chasers);
 				mapPanel.resetKeys(keys);
 		   		Random temp = new Random();
 				int j=0;
-		   		while (j <= keyCount) {
-		   			int x = temp.nextInt(50-4)+1;
-		   			int y = temp.nextInt(90-4)+1;
+		   		while (j < keyCount) {
+		   			int r = temp.nextInt(50-4)+1;
+		   			int c = temp.nextInt(90-4)+1;
 		   			
-		   			if (map.getSquare(x,y) == 4) //4 == ROOM_SPACE
+		   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
 		   			{
-		   				System.out.println("trying for key in "+x+" "+y+" with attribute number "+map.getSquare(x, y)); //error checking space spawned in
-			   			keys[j] = new LevelKey(map, x,y);
+		   				System.out.println("trying for key in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+			   			keys[j] = new LevelKey(map, r, c);
 			   			j++;
 		   			}
 		   		}
@@ -201,7 +215,7 @@ public class GamePanel extends JPanel{
 			   			i++;
 		   			}
 		   		}
-
+		   		mapPanel.checkKeys();
 		   		mapPanel.refreshTimer();
 		   		mapPanel.repaint();
 		   		timer.start();
