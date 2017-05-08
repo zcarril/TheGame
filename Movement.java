@@ -11,6 +11,7 @@ public abstract class Movement
 	private int originR;
 	private int originC;
 	private int OneStep=1;
+	private int jump=15;
 	//creates map and position variables for Player, and all
 	// creature types
 	
@@ -83,8 +84,27 @@ public abstract class Movement
 			break;
 		}
 	}
-	public void Gravity(){
-		move(4);
+	protected void jumpMove (int dir)
+	{
+		switch (dir)
+		{
+		case 1:
+			if (validMove(pos.r,pos.c-jump))
+				pos.c -= jump;
+			break;
+		case 2:
+			if (validMove(pos.r,pos.c+jump))
+				pos.c += jump;
+			break;					
+		case 3:
+			if (validMove(pos.r-(jump),pos.c))
+				pos.r -= (jump);
+			break;
+		case 4:
+			if (validMove(pos.r+jump,pos.c))
+				pos.r += jump;
+			break;
+		}
 	}
 	protected void monsterMove (int dir)
 	{
@@ -111,8 +131,15 @@ public abstract class Movement
 	protected void wander(){
 		Random temp = new Random();
 		int x=temp.nextInt((4 -1)+1);
-		monsterMove(x);
+		move(x);
 	}
-}
-
+	protected void teleport(){
+		Random temp = new Random();
+		int x=temp.nextInt((4 -1)+1);
+		int rand=temp.nextInt(100);
+		if (rand%13==0){
+			jumpMove(x);
+		}
+	}
+}	
 
