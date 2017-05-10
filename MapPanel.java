@@ -12,7 +12,8 @@ public class MapPanel extends JPanel
 	private Creature[] creatures;
 	private LevelKey[] keys;
 	private Slender[] slenders;
-
+	private Diags[] diags;
+	
 	private Player player;
 	private PlayerBomb bomb;
 	private int width, height, bSize;
@@ -21,11 +22,12 @@ public class MapPanel extends JPanel
 	private static int gameState;
 	private static int keyCount;
 
-	public MapPanel (Map map, Player player, Creature[] creatures, Slender[] slenders, LevelKey[] keys, PlayerBomb bomb, int squareSize){
+	public MapPanel (Map map, Player player, Creature[] creatures, Slender[] slenders, Diags[] diags, LevelKey[] keys, PlayerBomb bomb, int squareSize){
 		this.map = map;
 		this.player = player;
 		this.creatures = creatures;
 		this.slenders = slenders;
+		this.diags=diags;
 		this.keys=keys;
 		//sets border size to the size of a square, gets Width and Height
 		bSize = squareSize;
@@ -37,7 +39,7 @@ public class MapPanel extends JPanel
 
 		//sets the timer to the initial value(1000), fills the field for the Listener, and starts the timer
 		this.timer = new Timer (wait, null);
-		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders));
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders, diags));
 		timer.start();
 	}
 	//sets the game back to a playable state
@@ -63,19 +65,25 @@ public class MapPanel extends JPanel
 	public void resetChasers(Creature[] c){
 		this.creatures=c;
 		this.timer = new Timer (wait, null);
-		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders));
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders, diags));
 		timer.start();
 	}
 	public void resetSlenders(Slender[] s){
 		this.slenders=s;
 		this.timer = new Timer (wait, null);
-		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders));
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders, diags));
+		timer.start();
+	}
+	public void resetDiags(Diags[] d){
+		this.diags=d;;
+		this.timer = new Timer (wait, null);
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders, diags));
 		timer.start();
 	}
 	public void resetKeys(LevelKey[] k){
 		this.keys=k;
 		this.timer = new Timer (wait, null);
-		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders));
+		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders, diags));
 		timer.start();
 	}
 	
@@ -114,10 +122,15 @@ public class MapPanel extends JPanel
 					&& creature.getPos().r == player.getPos().r)
 				gameState = -1;
 		for (Slender slender: slenders){
-			if(slender.getPos().c==player.getPos().c && slender.getPos().r==player.getPos().r){
+			if(slender.getPos().c==player.getPos().c && slender.getPos().r==player.getPos().r)
+				gameState=-1;
+		}
+		for (Diags diag: diags){
+			if(diag.getPos().c==player.getPos().c && diag.getPos().r==player.getPos().r)
 				gameState=-1;
 			}
-		}
+		
+		
 				
 		//check if player eaten by creature type BuffCreature (lose)
 		return gameState;
@@ -151,6 +164,13 @@ public class MapPanel extends JPanel
 				bomb.changePosition(width-1, height-1);
 			}
 		}
+		for (Diags diag:diags){
+			if (bomb!=null)
+			if(diag.getPos().c==bomb.getPos().c && diag.getPos().r == bomb.getPos().r){
+				diag.changePosition(width-1, height-1);
+				bomb.changePosition(width-1, height-1);
+			}
+		}
 	}
 	
 
@@ -180,7 +200,10 @@ public class MapPanel extends JPanel
 				}
 				
 				else if (map.getSquare(r,c) == Map.WALL_SPACE){
-
+	//				int xx=temp.nextInt(200);
+	//				int yy=temp.nextInt(200);
+	//				int zz=temp.nextInt(200);
+	//				g2.setColor (new Color(xx,yy,zz));
 				if (c%2==0){
 					g2.setColor(new Color(60,30,3));
 				}
@@ -211,6 +234,13 @@ public class MapPanel extends JPanel
 				slenderIcon = new ImageIcon(newSlender);
 				slenderIcon.paintIcon(null, g2,slender.getPos().c * bSize, slender.getPos().r * bSize);
 			}
+		for (Diags diag: diags){
+			ImageIcon diagIcon = new ImageIcon("LSP.png");
+			Image diagImage = diagIcon.getImage(); //to transform it
+			Image newDiag = diagImage.getScaledInstance(bSize, bSize, java.awt.Image.SCALE_SMOOTH);
+			diagIcon = new ImageIcon(newDiag);
+			diagIcon.paintIcon(null, g2,diag.getPos().c * bSize, diag.getPos().r * bSize);
+		}
 		for (Creature creature: creatures){
 		//	g2.fillOval (creature.getPos().c * bSize,
 		//				creature.getPos().r * bSize, bSize, bSize);
@@ -250,15 +280,17 @@ public class MapPanel extends JPanel
 		private PlayerBomb bomb;
 		private Creature[] chasers;
 		private Slender[] sChasers;
+		private Diags[] dChasers;
 		private Timer timer;
 		private double k= 0.0001; //constant that sets the delay decay
 		
-		protected CreatureTimer (Timer t, Player player, PlayerBomb bomb, Creature[] chasers, Slender[] sChasers){
+		protected CreatureTimer (Timer t, Player player, PlayerBomb bomb, Creature[] chasers, Slender[] sChasers, Diags[] dChasers){
 			this.bomb=bomb;
 			this.timer = t;
 			this.player = player;
 			this.chasers = chasers;
 			this.sChasers=sChasers;
+			this.dChasers=dChasers;
 		}
 		//tells creatures to chase player, and is the timing
 		//	delay decay that happens every delay (decay multiplier over time)
@@ -272,7 +304,7 @@ public class MapPanel extends JPanel
 				if (Math.abs(a)<=5 || Math.abs(b)<5 ){
 					chaser.chase (player);
 				}
-					//timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
+				//	timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
 
 			}
 			for (Slender slender: slenders){
@@ -284,6 +316,9 @@ public class MapPanel extends JPanel
 				else{
 					slender.teleport();
 				}
+			}
+			for (Diags diag: diags){
+				diag.diagChase(player);
 			}
 		}
 	}

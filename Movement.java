@@ -11,6 +11,7 @@ public abstract class Movement
 	private int originR;
 	private int originC;
 	private int OneStep=1;
+	private int LongStep=5;
 	private int jump=15;
 	//creates map and position variables for Player, and all
 	// creature types
@@ -84,6 +85,25 @@ public abstract class Movement
 			break;
 		}
 	}
+	protected void diagMove(int dir){
+		switch (dir){
+		case 1:
+			move(1);
+			move(3);
+		case 2:
+			move(1);
+			move(4);
+			
+		case 3:
+			move(2);
+			move(4);
+		case 4:
+			move(2);
+			move(3);
+		}
+		
+	}
+	
 	protected void jumpMove (int dir)
 	{
 		switch (dir)
@@ -106,40 +126,82 @@ public abstract class Movement
 			break;
 		}
 	}
-	protected void monsterMove (int dir)
-	{
-		switch (dir)
+	protected void chase (Player player)
+	{//method to chase Player, by first creating a variable that colDelta and rowDelta
+	 //   these variables hold the creature's position minus the players position
+		int colDelta = getPos().c - player.getPos().c;
+		int rowDelta = getPos().r - player.getPos().r;
+
+		boolean horzMove = (Math.abs(colDelta) > Math.abs(rowDelta));
+		// the actual move, which is dependent on the variables just assigned
+		//	each move (1,2,3, or 4) is referred to below and will move it on step toward the Player position
+		if (horzMove)
 		{
-		case 1:
-			if (validMove(pos.r,pos.c-OneStep))
-				pos.c -= 0.5*OneStep;
-			break;
-		case 2:
-			if (validMove(pos.r,pos.c+OneStep))
-				pos.c += 0.5*OneStep;
-			break;					
-		case 3:
-			if (validMove(pos.r-(OneStep),pos.c))
-				pos.r -= 0.5*OneStep;
-			break;
-		case 4:
-			if (validMove(pos.r+OneStep,pos.c))
-				pos.r += 0.5*OneStep;
-			break;
+			if (colDelta > 0)
+				move(1);
+			else
+				move(2);
+		}
+		else
+		{
+			if (rowDelta > 0)
+				move (3);
+			else	
+				move (4);
+				
 		}
 	}
+	protected void diagChase (Player player)
+	{//method to chase Player, by first creating a variable that colDelta and rowDelta
+	 //   these variables hold the creature's position minus the players position
+		int colDelta = getPos().c - player.getPos().c;
+		int rowDelta = getPos().r - player.getPos().r;
+
+		boolean horzMove = (Math.abs(colDelta) > Math.abs(rowDelta));
+		// the actual move, which is dependent on the variables just assigned
+		//	each move (1,2,3, or 4) is referred to below and will move it on step toward the Player position
+		if (horzMove)
+		{
+			if (colDelta > 0 && rowDelta > 0 ){
+				move (1);
+				move (3);
+			}
+			else if (colDelta < 0 && rowDelta < 0){
+				move (2);
+				move (4);	
+			}
+		}
+		else
+		{
+			if (colDelta > 0 && rowDelta < 0){
+				move (1);
+				move (4);
+			}
+			else if (colDelta < 0 && rowDelta > 0 ){
+				move (2);
+				move (3);
+			}
+		}
+	}
+	
 	protected void wander(){
 		Random temp = new Random();
-		int x=temp.nextInt((4 -1)+1);
+		int x=temp.nextInt(5);
 		move(x);
 	}
 	protected void teleport(){
 		Random temp = new Random();
-		int x=temp.nextInt((4 -1)+1);
+		int x=temp.nextInt(5);
 		int rand=temp.nextInt(100);
 		if (rand%13==0){
 			jumpMove(x);
 		}
+	}
+	protected void diagJump(){
+		Random temp=new Random();
+		int x=temp.nextInt(5);
+		diagMove(x);
+		
 	}
 }	
 

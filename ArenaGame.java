@@ -21,7 +21,7 @@ public class ArenaGame{
 		JOptionPane.showMessageDialog(null, 
 				"You are the McBombBOI.\nYour goal is to make it to the FLICKERING exit (TOP RIGHT).\n"
 				+ "Collect ALL the keys to open the path and proceed to the next level.\n"
-				+ "CONTROLS:\n"
+				+ "C ONTROLS:\n"
 				+ "MOVE: arrow keys\n"
 				+ "DROP BOMB: press SPACE\n"
 				+ "   This is so you can kill monsters\n", 

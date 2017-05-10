@@ -12,6 +12,7 @@ public class GamePanel extends JPanel{
 	private static MapPanel mapPanel;
 	private static Creature[] chasers;
 	private static Slender[] sChasers;
+	private static Diags[] dChasers;
 	private static PlayerBomb bomb;
 	private static LevelKey[] keys;
 	private static Timer timer;
@@ -25,13 +26,14 @@ public class GamePanel extends JPanel{
 		this.keyCount=1;
 		int width = 90;
 		int height = 50;
-		int bSize = 17;
+		int bSize = 20;
 		map = new Map (width, height);
 		//starts player out in the top left corner of the map
 		player = new Player (map, 1, 0);
 		player.setNewMap(map);
 		chasers = new Creature[creatureCount];
 		sChasers= new Slender[creatureCount];
+		dChasers= new Diags[creatureCount];
 		keys=new LevelKey[keyCount];
 		
 
@@ -72,6 +74,17 @@ public class GamePanel extends JPanel{
 	   			k++;
    			}
    		}
+   		int l = 0;
+   		while (l < creatureCount) {
+   			int r = temp.nextInt(90-4)+1;
+   			int c = temp.nextInt(130-4)+1;
+   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+   			{
+	   			System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+	   			dChasers[l]= new Diags(map,r,c);
+	   			l++;
+   			}
+   		}
    		if (bomb!=null){
    			bomb=new PlayerBomb(map,player.getPos().r, player.getPos().c);
    		}
@@ -80,7 +93,7 @@ public class GamePanel extends JPanel{
 		//making new MapPanel object with everything it need to meet object type qualifications
 		//setting proper size,adding listeners, setting layout to flow layout, and finally adding
 		//	the mapPanel
-		mapPanel = new MapPanel (map, player, chasers, sChasers, keys, bomb, bSize);
+		mapPanel = new MapPanel (map, player, chasers, sChasers, dChasers, keys, bomb, bSize);
 		mapPanel.setPreferredSize (new Dimension ((width+2) * bSize, (height+1) * bSize));
 		mapPanel.addKeyListener (new PlayerController (player));
 		mapPanel.setFocusable (true);
@@ -138,9 +151,11 @@ public class GamePanel extends JPanel{
 					//randomly sets resets all Creature types
 					chasers = new Creature[creatureCount];
 					sChasers= new Slender[creatureCount];
+					dChasers= new Diags[creatureCount];
 					keys=new LevelKey[keyCount];
 					mapPanel.resetChasers(chasers);
 					mapPanel.resetSlenders(sChasers);
+					mapPanel.resetDiags(dChasers);
 					mapPanel.resetKeys(keys);
 			   		Random temp = new Random();
 					int j=0;
@@ -177,6 +192,17 @@ public class GamePanel extends JPanel{
 				   			k++;
 			   			}
 			   		}
+			   		int l = 0;
+			   		while (l < creatureCount) {
+			   			int r = temp.nextInt(90-4)+1;
+			   			int c = temp.nextInt(130-4)+1;
+			   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+			   			{
+				   			System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+				   			dChasers[l]= new Diags(map,r,c);
+				   			l++;
+			   			}
+			   		}
 
 
 			   		mapPanel.repaint();
@@ -210,14 +236,16 @@ public class GamePanel extends JPanel{
 				map = new Map (map.getWidth(), map.getHeight());//a new Map object, gets proper Width and Height from class
 				mapPanel.setNewMap(map);	//fetching mapPanel's method of setting up fresh mapPanel for game
 				player.setNewMap(map);		//sends new map to players, for new walls
-			//	mapPanel.refreshTimer();	//sets the delay to the original every new map 
+				mapPanel.refreshTimer();	//sets the delay to the original every new map 
 			//	mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
 				//randomly sets resets all Creature types
 				chasers = new Creature[creatureCount];
 				sChasers= new Slender[creatureCount];
+				dChasers= new Diags[creatureCount];
 				keys=new LevelKey[keyCount];
 				mapPanel.resetChasers(chasers);
 				mapPanel.resetSlenders(sChasers);
+				mapPanel.resetDiags(dChasers);
 				mapPanel.resetKeys(keys);
 		   		Random temp = new Random();
 				int j=0;
@@ -253,6 +281,17 @@ public class GamePanel extends JPanel{
 			   			System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
 			   			sChasers[k]= new Slender(map,r,c);
 			   			k++;
+		   			}
+		   		}
+		   		int l = 0;
+		   		while (l < creatureCount) {
+		   			int r = temp.nextInt(90-4)+1;
+		   			int c = temp.nextInt(130-4)+1;
+		   			if (map.getSquare(r,c) == 4) //4 == ROOM_SPACE
+		   			{
+			   			System.out.println("trying for creature in "+r+" "+c+" with attribute number "+map.getSquare(r, c)); //error checking space spawned in
+			   			dChasers[l]= new Diags(map,r,c);
+			   			l++;
 		   			}
 		   		}
 		   		mapPanel.checkKeys();
