@@ -18,6 +18,7 @@ public class ArenaGame{
 		else
 			numCreatures = Integer.parseInt (args[0]);
 		GamePanel panel = new GamePanel (numCreatures);
+		//initial panel that says how to play, pops up before game starts
 		JOptionPane.showMessageDialog(null, 
 				"You are the McBombBOI.\nYour goal is to make it to the FLICKERING exit (TOP RIGHT).\n"
 				+ "Collect ALL the keys to open the path and proceed to the next level.\n"
@@ -29,6 +30,7 @@ public class ArenaGame{
 				JOptionPane.INFORMATION_MESSAGE, 
 				null);
 		frame.add (panel);
+		//additional button just in case player wants to see how to play again
 		JButton howToPlay = new JButton("?");
 				
 				howToPlay.addActionListener(new ActionListener()

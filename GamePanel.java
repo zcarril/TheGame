@@ -21,7 +21,7 @@ public class GamePanel extends JPanel{
 	protected int keyCount;
 	
 	public GamePanel (int numCreatures){
-		// create a 90x50 map w/ 10x10-pixel blocks
+		// create a 90x50 map w/ 17x17-pixel blocks
 		this.creatureCount=numCreatures;
 		this.keyCount=1;
 		int width = 90;
@@ -135,11 +135,7 @@ public class GamePanel extends JPanel{
 			   		creatureCount= creatureCount + numLvl;			//creature multiplier
 			   		keyCount=numLvl+1;
 			   		System.out.println("new creature count "+creatureCount+" for level "+numLvl);
-			   				   	
-			   	//	chasers = new Creature[creatureCount];			
-			   	//	buffchasers= new BuffCreature[creatureCount];	<------	attempt at addition of creatures as you hit new levels.
-			   	//	cChasers= new CrookedCreature[creatureCount];			   
-			    
+
 			   		player.Reset();				//resets to origin position	
 			   		mapPanel.getKeyCount();
 			   		mapPanel.redoGameState();	//gameState in checkWinLoss is back to zero
@@ -147,8 +143,7 @@ public class GamePanel extends JPanel{
 					mapPanel.setNewMap(map);	//fetching mapPanel's method of setting up fresh mapPanel for game
 					player.setNewMap(map);		//sends new map to players, for new walls
 					mapPanel.refreshTimer();	//sets the delay to the original every new map 
-			//		mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
-					//randomly sets resets all Creature types
+					mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
 					chasers = new Creature[creatureCount];
 					sChasers= new Slender[creatureCount];
 					dChasers= new Diags[creatureCount];
@@ -157,6 +152,9 @@ public class GamePanel extends JPanel{
 					mapPanel.resetSlenders(sChasers);
 					mapPanel.resetDiags(dChasers);
 					mapPanel.resetKeys(keys);
+					
+					//randomly sets resets all Creature types and Key Objects
+
 			   		Random temp = new Random();
 					int j=0;
 			   		while (j < keyCount) {
@@ -224,20 +222,15 @@ public class GamePanel extends JPanel{
 		   		keyCount=1;
 		   		System.out.println("new creature count "+creatureCount+" for level "+numLvl);
 		   		System.out.println("new key count "+keyCount+" for level "+numLvl);
-		   				   	
-		   	//	chasers = new Creature[creatureCount];			
-		   	//	buffchasers= new BuffCreature[creatureCount];	<------	attempt at addition of creatures as you hit new levels.
-		   	//	cChasers= new CrookedCreature[creatureCount];			   
-		    
+
 		   		player.Reset();				//resets to origin position	
-		   	//	mapPanel.getKeyCount();
 		   		mapPanel.resetKeyCount();
 		   		mapPanel.redoGameState();	//gameState in checkWinLoss is back to zero
 				map = new Map (map.getWidth(), map.getHeight());//a new Map object, gets proper Width and Height from class
 				mapPanel.setNewMap(map);	//fetching mapPanel's method of setting up fresh mapPanel for game
 				player.setNewMap(map);		//sends new map to players, for new walls
 				mapPanel.refreshTimer();	//sets the delay to the original every new map 
-			//	mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
+				mapPanel.shortenDelay(numLvl);//increases delay multiplier if onto next level
 				//randomly sets resets all Creature types
 				chasers = new Creature[creatureCount];
 				sChasers= new Slender[creatureCount];
@@ -295,7 +288,6 @@ public class GamePanel extends JPanel{
 		   			}
 		   		}
 		   		mapPanel.checkKeys();
-		   		mapPanel.refreshTimer();
 		   		mapPanel.repaint();
 		   		timer.start();
 		   		}

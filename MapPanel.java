@@ -18,7 +18,7 @@ public class MapPanel extends JPanel
 	private PlayerBomb bomb;
 	private int width, height, bSize;
 	private Timer timer;
-	private int wait = 400; //wait for creatures to move
+	private int wait = 500; //wait for creatures to move
 	private static int gameState;
 	private static int keyCount;
 
@@ -82,9 +82,6 @@ public class MapPanel extends JPanel
 	}
 	public void resetKeys(LevelKey[] k){
 		this.keys=k;
-		this.timer = new Timer (wait, null);
-		timer.addActionListener(new CreatureTimer (timer, player, bomb, creatures, slenders, diags));
-		timer.start();
 	}
 	
 	public boolean checkRoomSpace(int r,int c){
@@ -99,17 +96,13 @@ public class MapPanel extends JPanel
 	}
 	public void placeBomb(Map m, int r, int c){
 		this.map=m;
-	//	r=player.getPos().r;
-	//	c=player.getPos().c;
 		bomb=new PlayerBomb(map,r,c);
 	}
 	//initial delay shortens by fraction of time, used upon clearing level
 	public void shortenDelay(int x){
 		this.timer.setDelay((int)(wait-x*10));
 	}
-	public void moveObject(Map map, int r, int x){
-		
-	}
+
 	//checker if won or lost (win==1, lose==-1 (gameState))
 	protected int checkWinLoss(){
 		//check if player at finish(win)
@@ -135,6 +128,7 @@ public class MapPanel extends JPanel
 		//check if player eaten by creature type BuffCreature (lose)
 		return gameState;
 	}
+	//checks position of player and keys, if same takes key off the map
 	protected int checkKeys(){
 		for (LevelKey key : keys){
 			if(key.getPos().c==player.getPos().c && key.getPos().r==player.getPos().r){
@@ -148,6 +142,7 @@ public class MapPanel extends JPanel
 		
 		return keyCount;
 	}
+	//checks position of enemies and bomb objects, if same, takes both from the map
 	protected void checkBombs(){
 		for (Creature creature : creatures){
 			if (bomb!=null)
@@ -182,16 +177,18 @@ public class MapPanel extends JPanel
 		int x=temp.nextInt(200);
 		int y=temp.nextInt(200);
 		int z=temp.nextInt(200);
-		for (int r = 0; r < height; r++)
-			for (int c = 0; c < width; c++){
+		int i = 0;
+		for (int r = i; r < height; r++)
+			for (int c = i; c < width; c++){
 				Rectangle2D.Double bkgnd =
 						new Rectangle2D.Double (c * bSize, r * bSize, bSize, bSize);
 				if (map.getSquare(r,c) == Map.OPEN_SPACE){
-					g2.setColor (new Color(150,150,150));
+
+							g2.setColor (new Color(150,150,150));	
 				}
 				else if (map.getSquare(r, c)== Map.ROOM_SPACE){
-					g2.setColor(new Color(120,100,100));
-					if (r%2==0 || c%2==0){
+					
+					if (r%2==i || c%2==i){
 						g2.setColor(new Color(80,80,80));
 					}
 					else{
@@ -200,16 +197,12 @@ public class MapPanel extends JPanel
 				}
 				
 				else if (map.getSquare(r,c) == Map.WALL_SPACE){
-	//				int xx=temp.nextInt(200);
-	//				int yy=temp.nextInt(200);
-	//				int zz=temp.nextInt(200);
-	//				g2.setColor (new Color(xx,yy,zz));
-				if (c%2==0){
-					g2.setColor(new Color(60,30,3));
-				}
-				else{
-					g2.setColor(new Color(80,34,3));
-				}
+					if (c%2==i){
+						g2.setColor(new Color(60,30,3));
+					}
+					else{
+						g2.setColor(new Color(80,34,3));
+					}
 			}
 				else if (map.getSquare(r,c) == Map.FINISH_SPACE)
 					g2.setColor (new Color(x,y,z));
@@ -223,17 +216,16 @@ public class MapPanel extends JPanel
 		Image newPerson = personImage.getScaledInstance(bSize, bSize, java.awt.Image.SCALE_SMOOTH);
 		personIcon = new ImageIcon(newPerson);
 		personIcon.paintIcon(null, g2,player.getPos().c * bSize, player.getPos().r * bSize);
-		//standard Creature
-		g2.setColor (Color.MAGENTA);
+		//Slender Creature
+
 		for (Slender slender: slenders){
-			//	g2.fillOval (creature.getPos().c * bSize,
-			//				creature.getPos().r * bSize, bSize, bSize);
 				ImageIcon slenderIcon = new ImageIcon("slenderEnemy.png");
 				Image slenderImage = slenderIcon.getImage(); //to transform it
 				Image newSlender = slenderImage.getScaledInstance(bSize, bSize, java.awt.Image.SCALE_SMOOTH);
 				slenderIcon = new ImageIcon(newSlender);
 				slenderIcon.paintIcon(null, g2,slender.getPos().c * bSize, slender.getPos().r * bSize);
 			}
+		//Diags
 		for (Diags diag: diags){
 			ImageIcon diagIcon = new ImageIcon("LSP.png");
 			Image diagImage = diagIcon.getImage(); //to transform it
@@ -241,19 +233,16 @@ public class MapPanel extends JPanel
 			diagIcon = new ImageIcon(newDiag);
 			diagIcon.paintIcon(null, g2,diag.getPos().c * bSize, diag.getPos().r * bSize);
 		}
+		//standard Mikes
 		for (Creature creature: creatures){
-		//	g2.fillOval (creature.getPos().c * bSize,
-		//				creature.getPos().r * bSize, bSize, bSize);
 			ImageIcon creatureIcon = new ImageIcon("mike.png");
 			Image creatureImage = creatureIcon.getImage(); //to transform it
 			Image newCreature = creatureImage.getScaledInstance(bSize, bSize, java.awt.Image.SCALE_SMOOTH);
 			creatureIcon = new ImageIcon(newCreature);
 			creatureIcon.paintIcon(null, g2,creature.getPos().c * bSize, creature.getPos().r * bSize);
 		}
-		g2.setColor(Color.YELLOW);
+		//for keys
 		for (LevelKey key: keys) {
-		//	g2.fillOval (key.getPos().c * bSize,
-			//		key.getPos().r * bSize, bSize, bSize);
 			ImageIcon keyIcon = new ImageIcon("key.png");
 			Image keyImage = keyIcon.getImage(); //to transform it
 			Image newKey = keyImage.getScaledInstance(bSize, bSize, java.awt.Image.SCALE_SMOOTH);
@@ -261,9 +250,8 @@ public class MapPanel extends JPanel
 			keyIcon.paintIcon(null, g2,key.getPos().c * bSize, key.getPos().r * bSize);
 		
 		}
+		//for bombs
 		if (bomb!=null){
-			//g2.setColor(Color.pink);
-			//g2.fillOval (bomb.getPos().c * bSize, bomb.getPos().r * bSize, bSize, bSize);
 			ImageIcon bombIcon = new ImageIcon("bomb.png");
 			Image bombImage = bombIcon.getImage(); //to transform it
 			Image newBomb = bombImage.getScaledInstance(bSize, bSize, java.awt.Image.SCALE_SMOOTH);
@@ -297,14 +285,16 @@ public class MapPanel extends JPanel
 		//takes the current delay, and subtracts a fraction of itself
 		//	and then sets that that number as the new delay
 		public void actionPerformed (ActionEvent e){
+		//	timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
 			for (Creature chaser : chasers){
-				chaser.wander();
 				double a= (player.getPos().r-chaser.getPos().r);
 				double b= (player.getPos().c-chaser.getPos().c);
 				if (Math.abs(a)<=5 || Math.abs(b)<5 ){
 					chaser.chase (player);
 				}
-				//	timer.setDelay((int)(timer.getDelay()-timer.getDelay()*k));
+				else{
+					chaser.wander();
+				}
 
 			}
 			for (Slender slender: slenders){
@@ -318,7 +308,14 @@ public class MapPanel extends JPanel
 				}
 			}
 			for (Diags diag: diags){
-				diag.diagChase(player);
+				double a= (player.getPos().r - diag.getPos().r);
+				double b= (player.getPos().c - diag.getPos().c);
+				if (Math.abs(a)<=5 || Math.abs(b)<5){
+					diag.diagChase(player);
+				}
+				else{
+					diag.wander();
+				}
 			}
 		}
 	}

@@ -24,10 +24,10 @@ public class Map
 		int y=0;
 		int x1=0;
 		int y1=0;
-		int c1=0;
-		int c2=0;
-		int c3=0;
-		int c4=0;
+		int c1=0;	//counters
+		int c2=0;	// ''
+		int c3=0;	// ''
+		int c4=0;	// ''
 		//if square is on the panel, makes it a WALL_SPACE
 
 
@@ -80,17 +80,20 @@ public class Map
 					}
 				}
 		}
+		//static hallways to entrance and exit hallway, in case of none randomly generation leaving player stuck
 		for (int r= 5; r< 25;r++)
 			for (int c=10; c<13;c++)
 				squares[r][c]=OPEN_SPACE;
 		for (int r= 5; r<25;r++)
 			for (int c=80;c<82;c++)
 				squares[r][c]=OPEN_SPACE;
+		
+		//random room generation
 		for (int r = 10; r < height; r++){
 			x=temp.nextInt((35 -10)+10);
 			y=temp.nextInt((75-10)+10);
 			for (int c = 10; c < width; c++){
-				if ((x%2==0 && x%3==0)){
+				if ((x%2==0 && y%3==0)){
 					for (int rr=x;rr<x+15;rr++){
 						for (int cc=y;cc<y+15;cc++){
 							if (x>10 && y>10) squares[rr][cc]=ROOM_SPACE;
@@ -113,11 +116,9 @@ public class Map
 		setFinish(4,width-1);
 		for (int c =1; c<5; c++ )
 			squares[c][width-2]=WALL_SPACE;
-		
-	//		for (int c =1; c<5; c++ ){
-//				setFinish (c, width-1);	
-//		}
+
 	}
+	//this will "open" the gate to the finish space
 	public void clearFinish(int x){		
 		if (x==0){
 			for (int c =3; c<5; c++ ){
